@@ -3,6 +3,7 @@ package fodiee.thenick.com.foodiee;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,6 +17,9 @@ import android.util.Log;
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
     LocationManager locationManager;
+
+    float currentLatitute=0;
+    float currentLongitude=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +85,35 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
+    public void checkIfLocationManuallySelected()
+    {
+        SharedPreferences sharedPref=getSharedPreferences("AppPref",MODE_PRIVATE);
+        currentLatitute=sharedPref.getFloat("Latitude",0);
+        currentLongitude=sharedPref.getFloat("Longitude",0);
+
+    }
 
 
     @SuppressLint("MissingPermission")
     public void onPermissionsGranted()
     {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MainActivity.this);
+        checkIfLocationManuallySelected();
+
+
+
+        if(currentLongitude==0 && currentLongitude==0) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MainActivity.this);
+        }
+
+
+
     }
 
     @Override
     public void onLocationChanged(Location location) {
+
+        currentLongitude=Float.parseFloat(String.valueOf(location.getLatitude()));
+        currentLongitude=Float.parseFloat(String.valueOf(location.getLongitude()));
 
         Log.v("location",location.getLatitude()+location.getLongitude()+"");
     }

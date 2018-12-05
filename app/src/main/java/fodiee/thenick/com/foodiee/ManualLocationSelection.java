@@ -97,7 +97,7 @@ public class ManualLocationSelection extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("response",response.toString());
+                Log.v("jsonResponse",response.toString());
 
                 try {
 
